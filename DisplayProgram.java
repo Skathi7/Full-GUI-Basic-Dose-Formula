@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 
 public class DisplayProgram {
 
-	private JFrame frame;
+	private JFrame frmUniversalDoseFormula;
 	private JTextField txtfDesiredDose;
 	private JLabel lblWelcome;
 	private JLabel lblDesiredDose;
@@ -26,6 +26,7 @@ public class DisplayProgram {
 	private JTextField txtfAmtOnHand;
 	private JLabel lblNumTab;
 	private JTextField txtfNumTab;
+	private double desiredDose, amtOnHand, numTab;
 
 	/**
 	 * Launch the application.
@@ -35,7 +36,7 @@ public class DisplayProgram {
 			public void run() {
 				try {
 					DisplayProgram window = new DisplayProgram();
-					window.frame.setVisible(true);
+					window.frmUniversalDoseFormula.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -54,27 +55,28 @@ public class DisplayProgram {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 320, 377);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmUniversalDoseFormula = new JFrame();
+		frmUniversalDoseFormula.setTitle("Universal Dose Formula");
+		frmUniversalDoseFormula.setResizable(false);
+		frmUniversalDoseFormula.setBounds(100, 100, 330, 394);
+		frmUniversalDoseFormula.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel.setBackground(SystemColor.inactiveCaption);
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		GroupLayout groupLayout = new GroupLayout(frmUniversalDoseFormula.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
-					.addGap(11))
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 284, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+					.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addGap(10))
 		);
 		
@@ -99,7 +101,7 @@ public class DisplayProgram {
 		lblCalcResult = new JLabel(" ");
 		lblCalcResult.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		lblAmtOnHand = new JLabel("Amount On Hand");
+		lblAmtOnHand = new JLabel("Amount on Hand");
 		lblAmtOnHand.setHorizontalAlignment(SwingConstants.LEFT);
 		lblAmtOnHand.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
@@ -109,7 +111,7 @@ public class DisplayProgram {
 		txtfAmtOnHand.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtfAmtOnHand.setColumns(10);
 		
-		lblNumTab = new JLabel("Number of tablets");
+		lblNumTab = new JLabel("Number of Tablets");
 		lblNumTab.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNumTab.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
@@ -119,48 +121,69 @@ public class DisplayProgram {
 		txtfNumTab.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtfNumTab.setColumns(10);
 		
-		JButton btnOK = new JButton("OK");
+		JButton btnOK = new JButton("OK");//Will use the basic universal dose formula to make the calculation if OK is pressed
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				double desiredDose = Double.parseDouble(txtfDesiredDose.getText());
-				double amtOnHand = Double.parseDouble(txtfAmtOnHand.getText());
-				double numTab = Double.parseDouble(txtfNumTab.getText());
-				lblCalcResult.setText( Double.toString((desiredDose/amtOnHand)*numTab) );
-			}
-		});
+				if (! (txtfDesiredDose.getText().isEmpty() || txtfAmtOnHand.getText().isEmpty() || txtfNumTab.getText().isEmpty()) ) {
+				 desiredDose = Double.parseDouble(txtfDesiredDose.getText());//Getting the users entered desired dose
+				 amtOnHand = Double.parseDouble(txtfAmtOnHand.getText());//Getting the users entered amount on hand
+				 numTab = Double.parseDouble(txtfNumTab.getText());//Getting the users entered number of tablets
+ 
+				 if ( numTab > 0 ) {//Diving by 0 would be undefined, checking we can do the math
+					 lblCalcResult.setText( Double.toString((desiredDose/amtOnHand)*numTab) );
+				 }else {
+					 lblCalcResult.setText("");
+				}//End of if else statement, making sure num of tablets is greater than 0 else set the result to blank
+			    }//End of major if statement, making sure the user entered values, note if anything but a number is entered there will be an error - NEEDS TO BE FIXED
+				else {//Else clear the results, if there is an old result still and the user forgot to enter the number of tablets(left it empty) this will clear the results. 
+					lblCalcResult.setText("");
+				}
+			}	
+		});//End of OK button
 		btnOK.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		JButton btnClear = new JButton("Clear");//Clear button, if pressed it will clear all text fields
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtfDesiredDose.setText("");//Clearing the user entry
+				txtfAmtOnHand.setText("");//Cleaning the user entry
+				txtfNumTab.setText("");//Clearing the user entry
+			}
+		});
+		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblWelcome, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(btnOK, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED, 13, Short.MAX_VALUE)
+							.addComponent(btnClear, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+							.addGap(12))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblAmtOnHand, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNumTab, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addGap(1)
+									.addComponent(lblAmtOnHand, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE))
 								.addComponent(lblDesiredDose, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(txtfDesiredDose, Alignment.LEADING)
-								.addComponent(txtfAmtOnHand, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtfNumTab, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+									.addComponent(txtfDesiredDose, Alignment.LEADING)
+									.addComponent(txtfAmtOnHand, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+							.addGap(56))
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(btnOK, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-							.addGap(21)
-							.addComponent(btnCancel, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE))
-						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-							.addGroup(gl_panel.createSequentialGroup()
-								.addComponent(lblResult)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(lblCalcResult, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-							.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
-								.addComponent(lblNumTab, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(txtfNumTab, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))))
+							.addGap(4)
+							.addComponent(lblResult)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblCalcResult, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 120, Short.MAX_VALUE)))
 					.addContainerGap())
+				.addComponent(lblWelcome, GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -168,27 +191,27 @@ public class DisplayProgram {
 					.addComponent(lblWelcome, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblDesiredDose)
-						.addComponent(txtfDesiredDose, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtfDesiredDose, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblDesiredDose))
 					.addGap(8)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblAmtOnHand)
-						.addComponent(txtfAmtOnHand, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtfAmtOnHand, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblAmtOnHand))
 					.addGap(8)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNumTab, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtfNumTab, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtfNumTab, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNumTab, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblResult)
-						.addComponent(lblCalcResult))
+						.addComponent(lblCalcResult)
+						.addComponent(lblResult))
 					.addGap(18)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnOK, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnCancel))
+						.addComponent(btnClear))
 					.addContainerGap())
 		);
 		panel.setLayout(gl_panel);
-		frame.getContentPane().setLayout(groupLayout);
+		frmUniversalDoseFormula.getContentPane().setLayout(groupLayout);
 	}
 }
