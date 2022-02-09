@@ -44,9 +44,8 @@ public class DisplayProgram {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+	//Create the application.
+	 
 	public DisplayProgram() {
 		initialize();
 	}
@@ -137,8 +136,8 @@ public class DisplayProgram {
 			    }//End of major if statement, making sure the user entered values, note if anything but a number is entered there will be an error - NEEDS TO BE FIXED
 				else {//Else clear the results, if there is an old result still and the user forgot to enter the number of tablets(left it empty) this will clear the results. 
 					lblCalcResult.setText("");
-				}
-			}	
+				}//Of end else if
+			}//End of OK button action performed
 		});//End of OK button
 		btnOK.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
@@ -148,8 +147,8 @@ public class DisplayProgram {
 				txtfDesiredDose.setText("");//Clearing the user entry
 				txtfAmtOnHand.setText("");//Cleaning the user entry
 				txtfNumTab.setText("");//Clearing the user entry
-			}
-		});
+			}//End of clear button action performed
+		});//End of Clear button 
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -214,4 +213,3 @@ public class DisplayProgram {
 		panel.setLayout(gl_panel);
 		frmUniversalDoseFormula.getContentPane().setLayout(groupLayout);
 	}
-}
