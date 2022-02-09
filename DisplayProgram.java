@@ -213,3 +213,4 @@ public class DisplayProgram {
 		panel.setLayout(gl_panel);
 		frmUniversalDoseFormula.getContentPane().setLayout(groupLayout);
 	}
+}
